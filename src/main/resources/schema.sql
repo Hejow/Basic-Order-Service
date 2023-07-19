@@ -7,6 +7,7 @@ CREATE TABLE shops
 (
     id              VARCHAR(30) PRIMARY KEY,
     name            VARCHAR(20) NOT NULL,
+    address         VARCHAR(50) NOT NULL,
     min_order_price INT         NOT NULL
 );
 
