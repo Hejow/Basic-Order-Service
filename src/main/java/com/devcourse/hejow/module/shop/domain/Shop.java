@@ -8,14 +8,12 @@ import java.util.UUID;
 @Getter
 public class Shop {
     private final UUID id;
-    private String name;
-    private final Address address;
+    private final String name;
     private final List<Menu> menus;
 
-    public Shop(UUID id, String name, Address address, List<Menu> menus) {
+    Shop(UUID id, String name, List<Menu> menus) {
         this.id = id;
         this.name = name;
-        this.address = address;
         this.menus = menus;
     }
 }

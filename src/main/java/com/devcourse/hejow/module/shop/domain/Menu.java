@@ -1,4 +1,4 @@
 package com.devcourse.hejow.module.shop.domain;
 
-public class Menu {
+public record Menu(String name, int price) {
 }
