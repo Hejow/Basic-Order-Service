@@ -13,4 +13,6 @@ public interface OrderRepository {
     Optional<Order> findById(UUID id);
 
     void startDelivery(UUID id);
+
+    void cancelOrder(UUID id);
 }

@@ -22,4 +22,14 @@ class OrderRepositoryImpl implements OrderRepository {
     public Optional<Order> findById(UUID id) {
         return Optional.empty();
     }
+
+    @Override
+    public void startDelivery(UUID id) {
+
+    }
+
+    @Override
+    public void cancelOrder(UUID id) {
+
+    }
 }

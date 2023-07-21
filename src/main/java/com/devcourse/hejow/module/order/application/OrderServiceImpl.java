@@ -36,6 +36,13 @@ class OrderServiceImpl implements OrderService {
         orderRepository.startDelivery(id);
     }
 
+    @Override
+    public void cancelOrder(UUID id) {
+        Order order = findById(id);
+        order.validateCancelable();
+        orderRepository.cancelOrder(id);
+    }
+
     private Order findById(UUID id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));

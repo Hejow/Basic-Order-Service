@@ -26,4 +26,14 @@ public class Order {
             throw new IllegalStateException("이미 주문이 완료되었거나 취소된 건입니다.");
         }
     }
+
+    public void validateCancelable() {
+        if (this.status == CANCELED) {
+            throw new IllegalStateException("이미 취소완료된 건입니다.");
+        }
+
+        if (this.status == DELIVERING) {
+            throw new IllegalStateException("이미 배달 중이라서 취소가 불가능합니다.");
+        }
+    }
 }
