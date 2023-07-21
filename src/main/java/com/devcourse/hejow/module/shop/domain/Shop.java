@@ -14,12 +14,18 @@ import static com.devcourse.hejow.global.exception.ErrorCode.LESS_THAN_MIN_AMOUN
 import static com.devcourse.hejow.global.exception.ErrorCode.NOT_SUPPORT_MENU;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Shop {
     private final UUID id;
     private final String name;
     private final List<Menu> menus;
     private final int minimumOrderPrice;
+
+    public Shop(String name, List<Menu> menus, int minimumOrderPrice) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.menus = menus;
+        this.minimumOrderPrice = minimumOrderPrice;
+    }
 
     public void validateOrder(List<OrderItem> orderItems, int totalPrice) {
         validateMinOrderPrice(totalPrice);

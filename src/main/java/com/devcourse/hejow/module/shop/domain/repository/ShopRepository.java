@@ -1,5 +1,7 @@
-package com.devcourse.hejow.module.shop.domain;
+package com.devcourse.hejow.module.shop.domain.repository;
 
+import com.devcourse.hejow.module.shop.domain.Menu;
+import com.devcourse.hejow.module.shop.domain.Shop;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

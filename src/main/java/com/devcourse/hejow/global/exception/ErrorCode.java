@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Getter
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(NOT_FOUND, "존재하지 않는 주문입니다."),
     SHOP_NOT_FOUND(NOT_FOUND, "존재하지 않는 매장입니다."),
 
-    // 408
+    // 409
     ALREADY_CANCELED(CONFLICT, "이미 취소완료된 건입니다."),
     ALREADY_DELIVERY_STARTED(CONFLICT, "이미 배달 중입니다."),
     NOT_ABLE_TO_CANCEL(CONFLICT, "이미 주문이 완료되었거나 취소된 건입니다."),

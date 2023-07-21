@@ -2,8 +2,6 @@ package com.devcourse.hejow.module.order.domain;
 
 import com.devcourse.hejow.global.exception.common.ValidationFailException;
 import com.devcourse.hejow.module.shop.domain.Shop;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
@@ -17,15 +15,22 @@ import static com.devcourse.hejow.module.order.domain.Order.Status.DELIVERING;
 import static com.devcourse.hejow.module.order.domain.Order.Status.ORDERED;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
-    enum Status { ORDERED, DELIVERING, CANCELED }
+    public enum Status { ORDERED, DELIVERING, CANCELED }
 
     private final UUID id;
     private final Shop shop;
     private final List<OrderItem> orderItems;
     private final int totalPrice;
     private Status status;
+
+    public Order(Shop shop, List<OrderItem> orderItems, int totalPrice, Status status) {
+        this.id = UUID.randomUUID();
+        this.shop = shop;
+        this.orderItems = orderItems;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
 
     public void validateDeliverable() {
         if (this.status != ORDERED) {

@@ -3,15 +3,17 @@ package com.devcourse.hejow.module.shop.application;
 import com.devcourse.hejow.global.exception.common.EntityNotFoundException;
 import com.devcourse.hejow.module.shop.domain.Menu;
 import com.devcourse.hejow.module.shop.domain.Shop;
-import com.devcourse.hejow.module.shop.domain.ShopRepository;
+import com.devcourse.hejow.module.shop.domain.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static com.devcourse.hejow.global.exception.ErrorCode.SHOP_NOT_FOUND;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ShopService {
     private final ShopRepository shopRepository;

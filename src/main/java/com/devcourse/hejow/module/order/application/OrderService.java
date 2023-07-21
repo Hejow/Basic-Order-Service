@@ -4,11 +4,12 @@ import com.devcourse.hejow.global.exception.common.EntityNotFoundException;
 import com.devcourse.hejow.module.order.application.dto.GetShopOrderResponse;
 import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
-import com.devcourse.hejow.module.order.domain.OrderRepository;
+import com.devcourse.hejow.module.order.domain.repository.OrderRepository;
 import com.devcourse.hejow.module.shop.application.ShopService;
 import com.devcourse.hejow.module.shop.domain.Shop;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 import static com.devcourse.hejow.global.exception.ErrorCode.ORDER_NOT_FOUND;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderService {
     private static final int ZERO = 0;
@@ -23,6 +25,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ShopService shopService;
 
+    @Transactional(readOnly = true)
     public List<GetShopOrderResponse> getAllOrderByShop(UUID shopId) {
         return orderRepository.findAllByShop(shopId).stream()
                 .map(this::toResponse)

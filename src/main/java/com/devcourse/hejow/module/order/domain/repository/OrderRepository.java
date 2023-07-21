@@ -1,5 +1,7 @@
-package com.devcourse.hejow.module.order.domain;
+package com.devcourse.hejow.module.order.domain.repository;
 
+import com.devcourse.hejow.module.order.domain.Order;
+import com.devcourse.hejow.module.order.domain.OrderItem;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

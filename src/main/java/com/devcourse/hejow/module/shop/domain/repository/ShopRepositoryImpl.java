@@ -1,5 +1,7 @@
-package com.devcourse.hejow.module.shop.domain;
+package com.devcourse.hejow.module.shop.domain.repository;
 
+import com.devcourse.hejow.module.shop.domain.Menu;
+import com.devcourse.hejow.module.shop.domain.Shop;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
