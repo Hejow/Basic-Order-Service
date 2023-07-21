@@ -1,6 +1,6 @@
 package com.devcourse.hejow.module.shop.application;
 
-import com.devcourse.hejow.global.exception.domain.EntityNotFoundException;
+import com.devcourse.hejow.global.exception.common.EntityNotFoundException;
 import com.devcourse.hejow.module.shop.domain.Menu;
 import com.devcourse.hejow.module.shop.domain.Shop;
 import com.devcourse.hejow.module.shop.domain.ShopRepository;

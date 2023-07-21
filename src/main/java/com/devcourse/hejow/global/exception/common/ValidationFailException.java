@@ -1,4 +1,4 @@
-package com.devcourse.hejow.global.exception.domain;
+package com.devcourse.hejow.global.exception.common;
 
 import com.devcourse.hejow.global.exception.CustomException;
 import com.devcourse.hejow.global.exception.ErrorCode;

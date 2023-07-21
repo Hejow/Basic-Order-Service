@@ -1,6 +1,6 @@
 package com.devcourse.hejow.module.shop.domain;
 
-import com.devcourse.hejow.global.exception.domain.ValidationFailException;
+import com.devcourse.hejow.global.exception.common.ValidationFailException;
 import com.devcourse.hejow.module.order.domain.OrderItem;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

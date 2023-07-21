@@ -1,6 +1,6 @@
 package com.devcourse.hejow.module.order.application;
 
-import com.devcourse.hejow.global.exception.domain.EntityNotFoundException;
+import com.devcourse.hejow.global.exception.common.EntityNotFoundException;
 import com.devcourse.hejow.module.order.application.dto.GetShopOrderResponse;
 import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
