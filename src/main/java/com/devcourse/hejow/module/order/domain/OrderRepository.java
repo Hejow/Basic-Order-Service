@@ -8,6 +8,8 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository {
+    List<Order> findAllByShop(UUID shopId);
+
     UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice);
 
     Optional<Order> findById(UUID id);

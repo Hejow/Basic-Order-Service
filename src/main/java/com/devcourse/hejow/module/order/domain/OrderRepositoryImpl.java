@@ -14,6 +14,11 @@ class OrderRepositoryImpl implements OrderRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
+    public List<Order> findAllByShop(UUID shopId) {
+        return null;
+    }
+
+    @Override
     public UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice) {
         return null;
     }
