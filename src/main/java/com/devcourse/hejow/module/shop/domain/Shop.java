@@ -1,5 +1,6 @@
 package com.devcourse.hejow.module.shop.domain;
 
+import com.devcourse.hejow.global.exception.domain.ValidationFailException;
 import com.devcourse.hejow.module.order.domain.OrderItem;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,10 @@ import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.devcourse.hejow.global.exception.ErrorCode.EMPTY_ORDER;
+import static com.devcourse.hejow.global.exception.ErrorCode.LESS_THAN_MIN_AMOUNT;
+import static com.devcourse.hejow.global.exception.ErrorCode.NOT_SUPPORT_MENU;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +28,7 @@ public class Shop {
 
     private void validateOrderItems(List<OrderItem> orderItems) {
         if (orderItems.isEmpty()) {
-            throw new IllegalArgumentException("주문 내역이 존재하지 않습니다.");
+            throw new ValidationFailException(EMPTY_ORDER);
         }
 
         for (OrderItem orderItem : orderItems) {
@@ -33,13 +38,13 @@ public class Shop {
 
     private void validateSupportMenu(Menu menu) {
         if (!menus.contains(menu)) {
-            throw new IllegalArgumentException("매장에 없는 메뉴입니다.");
+            throw new ValidationFailException(NOT_SUPPORT_MENU);
         }
     }
 
     private void validateMinOrderPrice(int totalPrice) {
         if (minimumOrderPrice > totalPrice) {
-            throw new IllegalArgumentException("최소 주문 금액을 만족하지 않습니다.");
+            throw new ValidationFailException(LESS_THAN_MIN_AMOUNT);
         }
     }
 }

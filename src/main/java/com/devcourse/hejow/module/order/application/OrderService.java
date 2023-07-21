@@ -1,6 +1,6 @@
 package com.devcourse.hejow.module.order.application;
 
-import com.devcourse.hejow.global.exception.EntityNotFoundException;
+import com.devcourse.hejow.global.exception.domain.EntityNotFoundException;
 import com.devcourse.hejow.module.order.application.dto.GetShopOrderResponse;
 import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.devcourse.hejow.global.exception.ErrorCode.ORDER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +51,7 @@ public class OrderService {
 
     private Order findById(UUID id) {
         return orderRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ORDER_NOT_FOUND));
     }
 
     private int calculateTotalPrice(List<OrderItem> orderItems) {
