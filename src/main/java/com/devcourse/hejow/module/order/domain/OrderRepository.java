@@ -11,4 +11,6 @@ public interface OrderRepository {
     UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice);
 
     Optional<Order> findById(UUID id);
+
+    void startDelivery(UUID id);
 }

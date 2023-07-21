@@ -8,6 +8,8 @@ import lombok.Getter;
 import java.util.List;
 import java.util.UUID;
 
+import static com.devcourse.hejow.module.order.domain.Order.Status.*;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
@@ -18,4 +20,10 @@ public class Order {
     private final List<OrderItem> orderItems;
     private final int totalPrice;
     private Status status;
+
+    public void validateDeliverable() {
+        if (this.status != ORDERED) {
+            throw new IllegalStateException("이미 주문이 완료되었거나 취소된 건입니다.");
+        }
+    }
 }

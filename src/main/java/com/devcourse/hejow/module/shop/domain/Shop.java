@@ -23,7 +23,7 @@ public class Shop {
 
     private void validateOrderItems(List<OrderItem> orderItems) {
         if (orderItems.isEmpty()) {
-            throw new IllegalArgumentException("주문 내역이 없습니다.");
+            throw new IllegalArgumentException("주문 내역이 존재하지 않습니다.");
         }
 
         for (OrderItem orderItem : orderItems) {

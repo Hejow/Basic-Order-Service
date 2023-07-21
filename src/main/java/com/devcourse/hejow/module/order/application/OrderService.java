@@ -9,4 +9,6 @@ import java.util.UUID;
 @Service
 public interface OrderService {
     UUID create(UUID shopId, List<OrderItem> orderItems);
+
+    void startDelivery(UUID id);
 }

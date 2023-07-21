@@ -1,5 +1,7 @@
 package com.devcourse.hejow.module.order.application;
 
+import com.devcourse.hejow.global.exception.EntityNotFoundException;
+import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
 import com.devcourse.hejow.module.order.domain.OrderRepository;
 import com.devcourse.hejow.module.shop.application.ShopService;
@@ -25,6 +27,18 @@ class OrderServiceImpl implements OrderService {
         shop.validateOrder(orderItems, totalPrice);
 
         return orderRepository.save(shop.getId(), orderItems, totalPrice);
+    }
+
+    @Override
+    public void startDelivery(UUID id) {
+        Order order = findById(id);
+        order.validateDeliverable();
+        orderRepository.startDelivery(id);
+    }
+
+    private Order findById(UUID id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 주문입니다."));
     }
 
     private int calculateTotalPrice(List<OrderItem> orderItems) {
