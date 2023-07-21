@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Service
 public interface OrderService {
-    UUID create(String name, String address, List<OrderItem> orderItems);
+    UUID create(UUID shopId, List<OrderItem> orderItems);
 }

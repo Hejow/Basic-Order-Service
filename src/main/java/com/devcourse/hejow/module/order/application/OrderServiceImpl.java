@@ -19,10 +19,10 @@ class OrderServiceImpl implements OrderService {
     private final ShopService shopService;
 
     @Override
-    public UUID create(String shopName, String shopAddress, List<OrderItem> orderItems) {
-        Shop shop = shopService.findByNameAndAddress(shopName, shopAddress);
+    public UUID create(UUID shopId, List<OrderItem> orderItems) {
+        Shop shop = shopService.findById(shopId);
         int totalPrice = calculateTotalPrice(orderItems);
-        shop.validateOrderItems(orderItems, totalPrice);
+        shop.validateOrder(orderItems, totalPrice);
 
         return orderRepository.save(shop.getId(), orderItems, totalPrice);
     }

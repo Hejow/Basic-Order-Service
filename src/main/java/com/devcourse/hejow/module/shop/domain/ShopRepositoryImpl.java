@@ -13,12 +13,17 @@ class ShopRepositoryImpl implements ShopRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<Shop> findById(UUID id) {
-        return Optional.empty();
+    public UUID save(String name, int minimumOrderPrice) {
+        return null;
     }
 
     @Override
-    public Optional<Shop> findByNameAndAddress(String name, String address) {
+    public void saveMenu(UUID id, Menu menu) {
+
+    }
+
+    @Override
+    public Optional<Shop> findById(UUID id) {
         return Optional.empty();
     }
 }

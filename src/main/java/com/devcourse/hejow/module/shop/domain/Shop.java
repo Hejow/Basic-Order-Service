@@ -16,7 +16,7 @@ public class Shop {
     private final List<Menu> menus;
     private final int minimumOrderPrice;
 
-    public void validateOrderItems(List<OrderItem> orderItems, int totalPrice) {
+    public void validateOrder(List<OrderItem> orderItems, int totalPrice) {
         validateMinOrderPrice(totalPrice);
         validateOrderItems(orderItems);
     }

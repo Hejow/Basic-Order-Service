@@ -7,7 +7,9 @@ import java.util.UUID;
 
 @Repository
 public interface ShopRepository {
-    Optional<Shop> findById(UUID id);
+    UUID save(String name, int minimumOrderPrice);
 
-    Optional<Shop> findByNameAndAddress(String name, String address);
+    void saveMenu(UUID id, Menu menu);
+
+    Optional<Shop> findById(UUID id);
 }

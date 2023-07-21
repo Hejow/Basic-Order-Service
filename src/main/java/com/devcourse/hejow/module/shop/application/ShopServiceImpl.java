@@ -1,10 +1,13 @@
 package com.devcourse.hejow.module.shop.application;
 
 import com.devcourse.hejow.global.exception.EntityNotFoundException;
+import com.devcourse.hejow.module.shop.domain.Menu;
 import com.devcourse.hejow.module.shop.domain.Shop;
 import com.devcourse.hejow.module.shop.domain.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -12,8 +15,19 @@ class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
 
     @Override
-    public Shop findByNameAndAddress(String name, String address) {
-        return shopRepository.findByNameAndAddress(name, address)
-                .orElseThrow(() -> new EntityNotFoundException("Incorrect Shop"));
+    public UUID create(String name, int minimumOrderPrice) {
+        return shopRepository.save(name, minimumOrderPrice);
+    }
+
+    @Override
+    public void newMenu(UUID id, String name, int price) {
+        Menu menu = new Menu(name, price);
+        shopRepository.saveMenu(id, menu);
+    }
+
+    @Override
+    public Shop findById(UUID id) {
+        return shopRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 매장입니다."));
     }
 }
