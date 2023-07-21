@@ -1,4 +1,9 @@
 package com.devcourse.hejow.module.order.domain;
 
-public record OrderItem(String name, int orderCount, int price) {
+import com.devcourse.hejow.module.shop.domain.Menu;
+
+public record OrderItem(Menu menu, int orderCount) {
+    public int calculatePrice() {
+        return menu.price() * orderCount;
+    }
 }

@@ -1,6 +1,5 @@
 package com.devcourse.hejow.module.order.application;
 
-import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
 import com.devcourse.hejow.module.order.domain.OrderRepository;
 import com.devcourse.hejow.module.shop.application.ShopService;
@@ -14,14 +13,22 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 class OrderServiceImpl implements OrderService {
+    private static final int ZERO = 0;
+
     private final OrderRepository orderRepository;
     private final ShopService shopService;
 
     @Override
-    public UUID create(String name, String address, List<OrderItem> orderItems) {
-        Shop shop = shopService.findByNameAndAddress(name, address);
-        Order order = Order.of(shop, orderItems);
-        orderRepository.save(order);
-        return order.getId();
+    public UUID create(String shopName, String shopAddress, List<OrderItem> orderItems) {
+        Shop shop = shopService.findByNameAndAddress(shopName, shopAddress);
+        int totalPrice = calculateTotalPrice(orderItems);
+        shop.validateOrderItems(orderItems, totalPrice);
+
+        return orderRepository.save(shop.getId(), orderItems, totalPrice);
+    }
+
+    private int calculateTotalPrice(List<OrderItem> orderItems) {
+        return orderItems.stream()
+                .reduce(ZERO, (total, item) -> total + item.calculatePrice(), Integer::sum);
     }
 }
