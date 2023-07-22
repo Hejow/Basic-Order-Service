@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface OrderRepository {
-    List<Order> findAllByShop(UUID shopId);
+    List<Order> findAllByShopId(UUID shopId);
 
     UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice);
 

@@ -18,11 +18,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.devcourse.hejow.module.order.domain.Order.Status.CANCELED;
+import static com.devcourse.hejow.module.order.domain.Order.Status.DELIVERING;
 import static com.devcourse.hejow.module.order.domain.Order.Status.ORDERED;
 import static com.devcourse.hejow.module.order.domain.Order.Status.valueOf;
 
 @Component
-@Primary
 @RequiredArgsConstructor
 class OrderRepositoryImpl implements OrderRepository {
     private final RowMapper<Order> orderMapper = (resultSet, i) -> {
@@ -44,13 +45,14 @@ class OrderRepositoryImpl implements OrderRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Order> findAllByShop(UUID shopId) {
+    public List<Order> findAllByShopId(UUID shopId) {
         return null;
     }
 
     @Override
     public UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice) {
-        String sql = "INSERT INTO orders(order_id, shop_id, total_price, status) VALUES(:orderId, :shopId, :totalPrice, :status)";
+        String sql = "INSERT INTO orders(order_id, shop_id, total_price, status) " +
+                     "VALUES(:orderId, :shopId, :totalPrice, :status)";
 
         UUID orderId = UUID.randomUUID();
         jdbcTemplate.update(sql, toOrderParameterMap(orderId, shopId, totalPrice));
@@ -70,12 +72,12 @@ class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void startDelivery(UUID id) {
-
+        updateStatus(id, DELIVERING);
     }
 
     @Override
     public void cancelOrder(UUID id) {
-
+        updateStatus(id, CANCELED);
     }
 
     public List<OrderItem> findAllOrderItem(UUID id) {
@@ -93,8 +95,21 @@ class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void saveAllOrderItem(UUID orderId, List<OrderItem> orderItems) {
-        String sql = "INSERT INTO order_items(order_id, name, count, price) VALUES(:orderId, :name, :orderCount, :price)";
+        String sql = "INSERT INTO order_items(order_id, name, count, price) " +
+                     "VALUES(:orderId, :name, :orderCount, :price)";
         jdbcTemplate.batchUpdate(sql, toOrderItemBatchParameterSource(orderId, orderItems));
+    }
+
+    private void updateStatus(UUID id, Order.Status status) {
+        String sql = "UPDATE orders SET status = :status WHERE order_id = :orderId";
+        jdbcTemplate.update(sql, toOrderStatusMap(id, status));
+    }
+
+    private Map<String, Object> toOrderStatusMap(UUID id, Order.Status status) {
+        return new HashMap<>() {{
+            put("orderId", id.toString());
+            put("status", status.name());
+        }};
     }
 
     private SqlParameterSource[] toOrderItemBatchParameterSource(UUID orderId, List<OrderItem> orderItems) {

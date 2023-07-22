@@ -27,7 +27,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<GetShopOrderResponse> getAllOrderByShop(UUID shopId) {
-        return orderRepository.findAllByShop(shopId).stream()
+        return orderRepository.findAllByShopId(shopId).stream()
                 .map(this::toResponse)
                 .toList();
     }

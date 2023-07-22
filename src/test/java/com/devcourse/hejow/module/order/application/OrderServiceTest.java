@@ -62,13 +62,13 @@ class OrderServiceTest {
         int price = 1_000;
         Order order = new Order(orderId, shop.getId(), List.of(), 0, ORDERED);
 
-        willReturn(List.of(order)).given(orderRepository).findAllByShop(any());
+        willReturn(List.of(order)).given(orderRepository).findAllByShopId(any());
 
         // when
         List<GetShopOrderResponse> responses = orderService.getAllOrderByShop(shop.getId());
 
         // then
-        then(orderRepository).should(times(1)).findAllByShop(any());
+        then(orderRepository).should(times(1)).findAllByShopId(any());
         assertThat(responses).isNotEmpty().hasSize(1);
 
         GetShopOrderResponse response = responses.get(0);
