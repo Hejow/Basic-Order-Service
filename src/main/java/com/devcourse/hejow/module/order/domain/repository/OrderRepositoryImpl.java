@@ -4,7 +4,6 @@ import com.devcourse.hejow.module.order.domain.Order;
 import com.devcourse.hejow.module.order.domain.OrderItem;
 import com.devcourse.hejow.module.shop.domain.Menu;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,7 +45,8 @@ class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<Order> findAllByShopId(UUID shopId) {
-        return null;
+        String sql = "SELECT * FROM orders WHERE shop_id = :shopId";
+        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), orderMapper);
     }
 
     @Override
