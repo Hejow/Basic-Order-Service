@@ -54,6 +54,7 @@ class OrderServiceTest {
     private Shop shop;
 
     private final UUID orderId = UUID.randomUUID();;
+    private final UUID shopId = UUID.randomUUID();;
 
     @Test
     @DisplayName("매장 아이디로 주문 내역을 불러오면 DTO로 변환된 리스트로 반환되어야 한다.")
@@ -103,7 +104,7 @@ class OrderServiceTest {
         @DisplayName("주문 항목들이 없으면 ValidationFailException 예외를 던져야 한다.")
         void create_Fail_ByEmptyOrderItems() {
             // given
-            Shop fakeShop = new Shop("", List.of(), 0);
+            Shop fakeShop = new Shop(shopId, "", List.of(), 0);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then
@@ -122,7 +123,7 @@ class OrderServiceTest {
             Menu menu = new Menu("chicken", price);
             List<OrderItem> orderItems = List.of(new OrderItem(menu, orderCount));
 
-            Shop fakeShop = new Shop("", List.of(), minimumOrderPrice);
+            Shop fakeShop = new Shop(shopId, "", List.of(), minimumOrderPrice);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then
@@ -141,7 +142,7 @@ class OrderServiceTest {
             Menu notSupportMenu = new Menu("another-chicken", price);
             List<OrderItem> orderItems = List.of(new OrderItem(notSupportMenu, orderCount));
 
-            Shop fakeShop = new Shop("", List.of(supportMenu), minimumOrderPrice);
+            Shop fakeShop = new Shop(shopId, "", List.of(supportMenu), minimumOrderPrice);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then

@@ -44,7 +44,7 @@ class OrderRepositoryImpl implements OrderRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Order> findAllByShopId(UUID shopId) {
+    public List<Order> findAllByShopId(UUID shopId) { // todo : test
         String sql = "SELECT * FROM orders WHERE shop_id = :shopId";
         return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), orderMapper);
     }
@@ -65,8 +65,7 @@ class OrderRepositoryImpl implements OrderRepository {
     public Optional<Order> findById(UUID id) {
         String sql = "SELECT * FROM orders WHERE order_id = :orderId";
 
-        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderMapper)
-                .stream()
+        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderMapper).stream()
                 .findFirst();
     }
 
