@@ -38,13 +38,14 @@ class ShopRepositoryImpl implements ShopRepository {
         String sql = "INSERT INTO shops(shop_id, name, min_order_price) VALUES(:shopId, :name, :minimumOrderPrice)";
         UUID shopId = UUID.randomUUID();
 
-        jdbcTemplate.update(sql, toShopParameter(shopId, name, minimumOrderPrice));
+        jdbcTemplate.update(sql, toShopParameterMap(shopId, name, minimumOrderPrice));
         return shopId;
     }
 
     @Override
     public void saveMenu(UUID id, Menu menu) {
-
+        String sql = "INSERT INTO menus(shop_id, name, price) VALUES(:shopId, :name, :price)";
+        jdbcTemplate.update(sql, toMenuParameterMap(id, menu));
     }
 
     @Override
@@ -55,11 +56,19 @@ class ShopRepositoryImpl implements ShopRepository {
                 .findFirst();
     }
 
-    private Map<String, Object> toShopParameter(UUID shopId, String name, int minimumOrderPrice) {
+    private Map<String, Object> toShopParameterMap(UUID shopId, String name, int minimumOrderPrice) {
         return new HashMap<>() {{
             put("shopId", shopId.toString());
             put("name", name);
             put("minimumOrderPrice", minimumOrderPrice);
+        }};
+    }
+
+    private Map<String, Object> toMenuParameterMap(UUID shopId, Menu menu) {
+        return new HashMap<>() {{
+            put("shopId", shopId.toString());
+            put("name", menu.name());
+            put("price", menu.price());
         }};
     }
 
