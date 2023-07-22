@@ -53,12 +53,14 @@ class OrderServiceTest {
     @Mock
     private Shop shop;
 
+    private final UUID orderId = UUID.randomUUID();;
+
     @Test
     @DisplayName("매장 아이디로 주문 내역을 불러오면 DTO로 변환된 리스트로 반환되어야 한다.")
     void getAllOrderByShopTest() {
         // given
         int price = 1_000;
-        Order order = new Order(shop, List.of(), price, ORDERED);
+        Order order = new Order(orderId, shop.getId(), List.of(), 0, ORDERED);
 
         willReturn(List.of(order)).given(orderRepository).findAllByShop(any());
 
@@ -156,7 +158,7 @@ class OrderServiceTest {
         @DisplayName("주문 완료 상태에서 주문 시작을 하면 Repository를 1번만 호출해야 한다.")
         void startDelivery_Success() {
             // given
-            Order order = new Order(shop, List.of(), 0, ORDERED);
+            Order order = new Order(orderId, shop.getId(), List.of(), 0, ORDERED);
 
             willReturn(Optional.of(order)).given(orderRepository).findById(any());
 
@@ -172,7 +174,7 @@ class OrderServiceTest {
         @EnumSource(value = Order.Status.class, mode = EnumSource.Mode.EXCLUDE, names = {"ORDERED"})
         void startDelivery_Fail_ByNoneOrderedStatus(Order.Status status) {
             // given
-            Order order = new Order(shop, List.of(), 0, status);
+            Order order = new Order(orderId, shop.getId(), List.of(), 0, status);
 
             willReturn(Optional.of(order)).given(orderRepository).findById(any());
 
@@ -190,7 +192,7 @@ class OrderServiceTest {
         @DisplayName("주문 완료 상태에서 주문 취소을 하면 정상적으로 취소되고 Repository를 한번만 호출해야 한다.")
         void cancelOrder_Success() {
             UUID id = UUID.randomUUID();
-            Order order = new Order(shop, List.of(), 0, ORDERED);
+            Order order = new Order(orderId, shop.getId(), List.of(), 0, ORDERED);
 
             willReturn(Optional.of(order)).given(orderRepository).findById(any());
 
@@ -207,7 +209,7 @@ class OrderServiceTest {
                 "DELIVERING, ALREADY_DELIVERY_STARTED",
                 "CANCELED, ALREADY_CANCELED"})
         void cancelOrder_Fail_ByAlreadyDeliveringOrCanceled(Order.Status status, ErrorCode errorCode) {
-            Order order = new Order(shop, List.of(), 0, status);
+            Order order = new Order(orderId, shop.getId(), List.of(), 0, status);
 
             willReturn(Optional.of(order)).given(orderRepository).findById(any());
 
