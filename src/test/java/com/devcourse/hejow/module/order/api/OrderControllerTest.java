@@ -63,7 +63,7 @@ class OrderControllerTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("주문하면 201 응답과 함께 서비스가 한번만 호출되어야 한다.")
     void createOrderTest() throws Exception {
         // given
         Menu menu = new Menu("chicken", 15000);

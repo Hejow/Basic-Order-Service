@@ -27,7 +27,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<GetShopOrderResponse> getAllOrderByShop(UUID shopId) {
-        return orderRepository.findAllByShopId(shopId).stream()
+        return orderRepository.findAllOrderByShopId(shopId).stream()
                 .map(this::toResponse)
                 .toList();
     }
@@ -42,13 +42,13 @@ public class OrderService {
 
     public void startDelivery(UUID id) {
         Order order = findById(id);
-        order.validateDeliverable();
+        order.validateStatus();
         orderRepository.startDelivery(id);
     }
 
     public void cancelOrder(UUID id) {
         Order order = findById(id);
-        order.validateCancelable();
+        order.validateStatus();
         orderRepository.cancelOrder(id);
     }
 
@@ -63,6 +63,6 @@ public class OrderService {
     }
 
     private GetShopOrderResponse toResponse(Order order) {
-        return new GetShopOrderResponse(order.getId(), order.getTotalPrice());
+        return new GetShopOrderResponse(order.getId(), order.getTotalPrice(), order.getStatus());
     }
 }

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -26,7 +25,6 @@ import java.util.UUID;
 
 import static com.devcourse.hejow.global.exception.ErrorCode.EMPTY_ORDER;
 import static com.devcourse.hejow.global.exception.ErrorCode.LESS_THAN_MIN_AMOUNT;
-import static com.devcourse.hejow.global.exception.ErrorCode.NOT_ABLE_TO_CANCEL;
 import static com.devcourse.hejow.global.exception.ErrorCode.NOT_SUPPORT_MENU;
 import static com.devcourse.hejow.module.order.domain.Order.Status.ORDERED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,13 +61,13 @@ class OrderServiceTest {
         int price = 1_000;
         Order order = new Order(orderId, shop.getId(), List.of(), 0, ORDERED);
 
-        willReturn(List.of(order)).given(orderRepository).findAllByShopId(any());
+        willReturn(List.of(order)).given(orderRepository).findAllOrderByShopId(any());
 
         // when
         List<GetShopOrderResponse> responses = orderService.getAllOrderByShop(shop.getId());
 
         // then
-        then(orderRepository).should(times(1)).findAllByShopId(any());
+        then(orderRepository).should(times(1)).findAllOrderByShopId(any());
         assertThat(responses).isNotEmpty().hasSize(1);
 
         GetShopOrderResponse response = responses.get(0);
@@ -172,8 +170,10 @@ class OrderServiceTest {
 
         @ParameterizedTest
         @DisplayName("주문 완료 이외의 상태에서 주문 시작을 하면 ValidationFailException 예외를 던져야 한다.")
-        @EnumSource(value = Order.Status.class, mode = EnumSource.Mode.EXCLUDE, names = {"ORDERED"})
-        void startDelivery_Fail_ByNoneOrderedStatus(Order.Status status) {
+        @CsvSource(value = {
+                "DELIVERING, ALREADY_DELIVERY_STARTED",
+                "CANCELED, ALREADY_CANCELED"})
+        void startDelivery_Fail_ByNoneOrderedStatus(Order.Status status, ErrorCode errorCode) {
             // given
             Order order = new Order(orderId, shop.getId(), List.of(), 0, status);
 
@@ -182,7 +182,7 @@ class OrderServiceTest {
             // when, then
             assertThatExceptionOfType(ValidationFailException.class)
                     .isThrownBy(() -> orderService.startDelivery(order.getId()))
-                    .withMessage(NOT_ABLE_TO_CANCEL.getMessage());
+                    .withMessage(errorCode.getMessage());
         }
     }
 

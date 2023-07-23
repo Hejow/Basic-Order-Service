@@ -1,7 +1,9 @@
 package com.devcourse.hejow.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
 
+@Getter
 @JsonPropertyOrder({"errorCode", "message"})
 class ErrorResponse {
     private final String errorCode;

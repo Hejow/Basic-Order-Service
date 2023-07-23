@@ -37,3 +37,15 @@ CREATE TABLE order_items
     price         INT         NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders (order_id) ON DELETE CASCADE
 );
+
+INSERT INTO shops(shop_id, name, min_order_price)
+VALUES ('e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf', 'hejow-chicken', 15000);
+
+INSERT INTO menus(shop_id, name, price)
+VALUES ('e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf', 'fried_chicken', 16900);
+
+INSERT INTO menus(shop_id, name, price)
+VALUES ('e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf', 'jon_mat_chicken', 18900);
+
+INSERT INTO menus(shop_id, name, price)
+VALUES ('e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf', 'fries', 3500);

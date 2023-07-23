@@ -16,7 +16,7 @@ public class ApiResponse<T> {
     private final String message;
     private final T payload;
 
-    public static <T> ApiResponse<T> ok(T payload) {
+    public static <T> ApiResponse<T> withPayload(T payload) {
         return new ApiResponse<>(SUCCESS, payload);
     }
 

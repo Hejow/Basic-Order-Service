@@ -25,9 +25,9 @@ public class ShopController {
 
     @ResponseStatus(CREATED)
     @PostMapping
-    public ApiResponse<Void> create(@RequestBody @Valid CreateShopRequest request) {
-        shopService.create(request.name(), request.minimumOrderPrice());
-        return ApiResponse.noPayload();
+    public ApiResponse<UUID> create(@RequestBody @Valid CreateShopRequest request) {
+        UUID id = shopService.create(request.name(), request.minimumOrderPrice());
+        return ApiResponse.withPayload(id);
     }
 
     @ResponseStatus(CREATED)

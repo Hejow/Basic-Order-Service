@@ -27,7 +27,7 @@ import static com.devcourse.hejow.module.order.domain.Order.Status.valueOf;
 class OrderRepositoryImpl implements OrderRepository {
     private final RowMapper<Order> orderMapper = (resultSet, i) -> {
         UUID orderId = UUID.fromString(resultSet.getString("order_id"));
-        UUID shopId = resultSet.getString("shop_id") == null ? null : UUID.fromString(resultSet.getString("shop_id")); // todo : erase null
+        UUID shopId = UUID.fromString(resultSet.getString("shop_id"));
         int totalPrice = resultSet.getInt("total_price");
         Order.Status status = valueOf(resultSet.getString("status"));
         List<OrderItem> orderItems = findAllOrderItem(orderId);
@@ -44,7 +44,7 @@ class OrderRepositoryImpl implements OrderRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Order> findAllByShopId(UUID shopId) { // todo : test
+    public List<Order> findAllOrderByShopId(UUID shopId) { // todo : test
         String sql = "SELECT * FROM orders WHERE shop_id = :shopId";
         return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), orderMapper);
     }
@@ -65,7 +65,8 @@ class OrderRepositoryImpl implements OrderRepository {
     public Optional<Order> findById(UUID id) {
         String sql = "SELECT * FROM orders WHERE order_id = :orderId";
 
-        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderMapper).stream()
+        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderMapper)
+                .stream()
                 .findFirst();
     }
 
@@ -87,7 +88,7 @@ class OrderRepositoryImpl implements OrderRepository {
     private Map<String, Object> toOrderParameterMap(UUID orderId, UUID shopId, int totalPrice) {
         return new HashMap<>() {{
             put("orderId", orderId.toString());
-            put("shopId", shopId == null ? null : shopId.toString()); // todo : erase null
+            put("shopId", shopId.toString());
             put("totalPrice", totalPrice);
             put("status", ORDERED.name());
         }};

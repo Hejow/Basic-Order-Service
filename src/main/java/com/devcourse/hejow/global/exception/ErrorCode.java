@@ -24,7 +24,6 @@ public enum ErrorCode {
     // 409
     ALREADY_CANCELED(CONFLICT, "이미 취소완료된 건입니다."),
     ALREADY_DELIVERY_STARTED(CONFLICT, "이미 배달 중입니다."),
-    NOT_ABLE_TO_CANCEL(CONFLICT, "이미 주문이 완료되었거나 취소된 건입니다."),
 
     // 500
     INTERVAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 내부 오류입니다."),

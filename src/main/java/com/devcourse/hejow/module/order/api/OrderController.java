@@ -30,7 +30,7 @@ public class OrderController {
     @GetMapping("/{shopId}")
     public ApiResponse<List<GetShopOrderResponse>> getAllOrderByShop(@PathVariable UUID shopId) {
         List<GetShopOrderResponse> responses = orderService.getAllOrderByShop(shopId);
-        return ApiResponse.ok(responses);
+        return ApiResponse.withPayload(responses);
     }
 
     @ResponseStatus(CREATED)

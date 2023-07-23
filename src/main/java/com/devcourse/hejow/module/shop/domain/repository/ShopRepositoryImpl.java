@@ -52,8 +52,14 @@ class ShopRepositoryImpl implements ShopRepository {
     public Optional<Shop> findById(UUID id) {
         String sql = "SELECT * FROM shops WHERE shop_id = :shopId";
 
-        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", id.toString()), shopMapper).stream()
+        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", id.toString()), shopMapper)
+                .stream()
                 .findFirst();
+    }
+
+    private List<Menu> findAllMenu(UUID shopId) {
+        String sql = "SELECT * FROM menus WHERE shop_id = :shopId";
+        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), menuMapper);
     }
 
     private Map<String, Object> toShopParameterMap(UUID shopId, String name, int minimumOrderPrice) {
@@ -70,10 +76,5 @@ class ShopRepositoryImpl implements ShopRepository {
             put("name", menu.name());
             put("price", menu.price());
         }};
-    }
-
-    private List<Menu> findAllMenu(UUID shopId) {
-        String sql = "SELECT * FROM menus WHERE shop_id = :shopId";
-        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), menuMapper);
     }
 }

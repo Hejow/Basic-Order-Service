@@ -26,20 +26,21 @@ class OrderRepositoryImplTest {
     @Autowired
     private OrderRepository orderRepository;
 
+    private final UUID shopId = UUID.fromString("e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf");
+
     @Test
-    @DisplayName("생성하면 id 생성되고 주문 완료 상태가 되며 주문 상품들도 저장되어야 한다.")
+    @DisplayName("주문하면 id 생성되고 주문 완료 상태가 되며 주문 상품들도 저장되어야 한다.")
     void saveTest() {
         // given
         int price = 15000;
         int orderCount = 2;
         int totalPrice = price * orderCount;
-        UUID shopId = UUID.randomUUID();
 
         Menu menu = new Menu("chicken", price);
         OrderItem orderItem = new OrderItem(menu, orderCount);
 
         // when
-        UUID orderId = orderRepository.save(null, List.of(orderItem), totalPrice);
+        UUID orderId = orderRepository.save(shopId, List.of(orderItem), totalPrice); // todo: handle null
 
         // then
         Optional<Order> orderOptional = orderRepository.findById(orderId);
@@ -47,7 +48,7 @@ class OrderRepositoryImplTest {
 
         Order order = orderOptional.get();
         assertThat(order.getId()).isEqualTo(orderId);
-//        assertThat(order.getShopId()).isEqualTo(shopId);
+        assertThat(order.getShopId()).isEqualTo(shopId);
         assertThat(order.getStatus()).isEqualTo(ORDERED);
         assertThat(order.getTotalPrice()).isEqualTo(totalPrice);
         assertThat(order.getOrderItems()).isNotEmpty().hasSize(1);
@@ -64,7 +65,7 @@ class OrderRepositoryImplTest {
 
         @BeforeEach
         void initOrder() {
-            orderId = orderRepository.save(null, List.of(), 0);
+            orderId = orderRepository.save(shopId, List.of(), 0);
         }
 
         @Test
