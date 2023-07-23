@@ -29,7 +29,21 @@ class OrderRepositoryImplTest {
     private final UUID shopId = UUID.fromString("e59fc106-6ec9-49c3-bc7a-9fcbd2ded6bf");
 
     @Test
-    @DisplayName("주문하면 id 생성되고 주문 완료 상태가 되며 주문 상품들도 저장되어야 한다.")
+    @DisplayName("매장 아이디로 조회하면 주문 개수만큼 가져올 수 있어야 한다.")
+    void findAllByShopIdTest() {
+        // given
+        orderRepository.save(shopId, List.of(), 0);
+        orderRepository.save(shopId, List.of(), 0);
+
+        // when
+        List<Order> orders = orderRepository.findAllOrderByShopId(shopId);
+
+        // then
+        assertThat(orders).isNotEmpty().hasSize(2);
+    }
+
+    @Test
+    @DisplayName("주문하면 아이디가 생성되고 주문 완료 상태가 되며 주문 상품들도 저장되어야 한다.")
     void saveTest() {
         // given
         int price = 15000;
