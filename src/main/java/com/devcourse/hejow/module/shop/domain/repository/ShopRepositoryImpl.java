@@ -17,6 +17,11 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 class ShopRepositoryImpl implements ShopRepository {
+    private static final String INSERT_SHOP_SQL = "INSERT INTO shops(shop_id, name, min_order_price) VALUES(:shopId, :name, :minimumOrderPrice)";
+    private static final String INSERT_MENU_SQL = "INSERT INTO menus(shop_id, name, price) VALUES(:shopId, :name, :price)";
+    private static final String SELECT_BY_SHOP_ID_SQL = "SELECT * FROM shops WHERE shop_id = :shopId";
+    private static final String SELECT_ALL_MENU_BY_SHOP_ID_SQL = "SELECT * FROM menus WHERE shop_id = :shopId";
+
     private final RowMapper<Shop> shopMapper = (resultSet, i) -> {
         UUID shopId = UUID.fromString(resultSet.getString("shop_id"));
         String name = resultSet.getString("name");
@@ -35,31 +40,24 @@ class ShopRepositoryImpl implements ShopRepository {
 
     @Override
     public UUID save(String name, int minimumOrderPrice) {
-        String sql = "INSERT INTO shops(shop_id, name, min_order_price) VALUES(:shopId, :name, :minimumOrderPrice)";
         UUID shopId = UUID.randomUUID();
-
-        jdbcTemplate.update(sql, toShopParameterMap(shopId, name, minimumOrderPrice));
+        jdbcTemplate.update(INSERT_SHOP_SQL, toShopParameterMap(shopId, name, minimumOrderPrice));
         return shopId;
     }
-
     @Override
     public void saveMenu(UUID id, Menu menu) {
-        String sql = "INSERT INTO menus(shop_id, name, price) VALUES(:shopId, :name, :price)";
-        jdbcTemplate.update(sql, toMenuParameterMap(id, menu));
+        jdbcTemplate.update(INSERT_MENU_SQL, toMenuParameterMap(id, menu));
     }
 
     @Override
     public Optional<Shop> findById(UUID id) {
-        String sql = "SELECT * FROM shops WHERE shop_id = :shopId";
-
-        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", id.toString()), shopMapper)
+        return jdbcTemplate.query(SELECT_BY_SHOP_ID_SQL, Collections.singletonMap("shopId", id.toString()), shopMapper)
                 .stream()
                 .findFirst();
     }
 
     private List<Menu> findAllMenu(UUID shopId) {
-        String sql = "SELECT * FROM menus WHERE shop_id = :shopId";
-        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), menuMapper);
+        return jdbcTemplate.query(SELECT_ALL_MENU_BY_SHOP_ID_SQL, Collections.singletonMap("shopId", shopId.toString()), menuMapper);
     }
 
     private Map<String, Object> toShopParameterMap(UUID shopId, String name, int minimumOrderPrice) {

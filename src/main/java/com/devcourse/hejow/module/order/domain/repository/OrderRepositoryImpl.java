@@ -25,6 +25,13 @@ import static com.devcourse.hejow.module.order.domain.Order.Status.valueOf;
 @Component
 @RequiredArgsConstructor
 class OrderRepositoryImpl implements OrderRepository {
+    private static final String SELECT_ALL_ORDER_BY_SHOP_ID_SQL = "SELECT * FROM orders WHERE shop_id = :shopId";
+    private static final String SELECT_ALL_ITEM_BY_ORDER_ID_SQL = "SELECT * FROM order_items WHERE order_id = :orderId";
+    private static final String SELECT_BY_ORDER_ID_SQL = "SELECT * FROM orders WHERE order_id = :orderId";
+    private static final String INSERT_ORDER_SQL = "INSERT INTO orders(order_id, shop_id, total_price, status) VALUES(:orderId, :shopId, :totalPrice, :status)";
+    private static final String INSERT_ITEM_SQL = "INSERT INTO order_items(order_id, name, count, price) VALUES(:orderId, :name, :orderCount, :price)";
+    private static final String UPDATE_ORDER_STATUS_SQL = "UPDATE orders SET status = :status WHERE order_id = :orderId";
+
     private final RowMapper<Order> orderMapper = (resultSet, i) -> {
         UUID orderId = UUID.fromString(resultSet.getString("order_id"));
         UUID shopId = UUID.fromString(resultSet.getString("shop_id"));
@@ -45,17 +52,13 @@ class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<Order> findAllOrderByShopId(UUID shopId) { // todo : test
-        String sql = "SELECT * FROM orders WHERE shop_id = :shopId";
-        return jdbcTemplate.query(sql, Collections.singletonMap("shopId", shopId.toString()), orderMapper);
+        return jdbcTemplate.query(SELECT_ALL_ORDER_BY_SHOP_ID_SQL, Collections.singletonMap("shopId", shopId.toString()), orderMapper);
     }
 
     @Override
     public UUID save(UUID shopId, List<OrderItem> orderItems, int totalPrice) {
-        String sql = "INSERT INTO orders(order_id, shop_id, total_price, status) " +
-                     "VALUES(:orderId, :shopId, :totalPrice, :status)";
-
         UUID orderId = UUID.randomUUID();
-        jdbcTemplate.update(sql, toOrderParameterMap(orderId, shopId, totalPrice));
+        jdbcTemplate.update(INSERT_ORDER_SQL, toOrderParameterMap(orderId, shopId, totalPrice));
         saveAllOrderItem(orderId, orderItems);
 
         return orderId;
@@ -63,9 +66,7 @@ class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> findById(UUID id) {
-        String sql = "SELECT * FROM orders WHERE order_id = :orderId";
-
-        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderMapper)
+        return jdbcTemplate.query(SELECT_BY_ORDER_ID_SQL, Collections.singletonMap("orderId", id.toString()), orderMapper)
                 .stream()
                 .findFirst();
     }
@@ -81,8 +82,7 @@ class OrderRepositoryImpl implements OrderRepository {
     }
 
     public List<OrderItem> findAllOrderItem(UUID id) {
-        String sql = "SELECT * FROM order_items WHERE order_id = :orderId";
-        return jdbcTemplate.query(sql, Collections.singletonMap("orderId", id.toString()), orderItemMapper);
+        return jdbcTemplate.query(SELECT_ALL_ITEM_BY_ORDER_ID_SQL, Collections.singletonMap("orderId", id.toString()), orderItemMapper);
     }
 
     private Map<String, Object> toOrderParameterMap(UUID orderId, UUID shopId, int totalPrice) {
@@ -95,14 +95,11 @@ class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void saveAllOrderItem(UUID orderId, List<OrderItem> orderItems) {
-        String sql = "INSERT INTO order_items(order_id, name, count, price) " +
-                     "VALUES(:orderId, :name, :orderCount, :price)";
-        jdbcTemplate.batchUpdate(sql, toOrderItemBatchParameterSource(orderId, orderItems));
+        jdbcTemplate.batchUpdate(INSERT_ITEM_SQL, toOrderItemBatchParameterSource(orderId, orderItems));
     }
 
     private void updateStatus(UUID id, Order.Status status) {
-        String sql = "UPDATE orders SET status = :status WHERE order_id = :orderId";
-        jdbcTemplate.update(sql, toOrderStatusMap(id, status));
+        jdbcTemplate.update(UPDATE_ORDER_STATUS_SQL, toOrderStatusMap(id, status));
     }
 
     private Map<String, Object> toOrderStatusMap(UUID id, Order.Status status) {
