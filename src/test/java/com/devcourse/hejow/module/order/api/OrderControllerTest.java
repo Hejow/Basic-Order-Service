@@ -51,7 +51,7 @@ class OrderControllerTest {
         willReturn(List.of()).given(orderService).getAllOrderByShop(any());
 
         // when
-        mockMvc.perform(get(BASE_URI + "/" + id)
+        mockMvc.perform(get(BASE_URI + "/{id}", id)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.payload").isArray())
@@ -73,7 +73,7 @@ class OrderControllerTest {
         willReturn(id).given(orderService).create(any(), anyList());
 
         // when
-        mockMvc.perform(post(BASE_URI + "/" + id)
+        mockMvc.perform(post(BASE_URI + "/{id}", id)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())

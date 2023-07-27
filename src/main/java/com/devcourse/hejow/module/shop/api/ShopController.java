@@ -31,7 +31,7 @@ public class ShopController {
     }
 
     @ResponseStatus(CREATED)
-    @PostMapping("/{id}/menus")
+    @PostMapping("/{id}/menu")
     public ApiResponse<Void> createMenu(@PathVariable UUID id,
                                         @RequestBody @Valid CreateMenuRequest request) {
         shopService.newMenu(id, request.name(), request.price());

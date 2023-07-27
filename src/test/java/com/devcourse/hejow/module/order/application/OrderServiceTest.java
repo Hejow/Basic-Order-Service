@@ -52,7 +52,6 @@ class OrderServiceTest {
     private Shop shop;
 
     private final UUID orderId = UUID.randomUUID();;
-    private final UUID shopId = UUID.randomUUID();;
 
     @Test
     @DisplayName("매장 아이디로 주문 내역을 불러오면 DTO로 변환된 리스트로 반환되어야 한다.")
@@ -78,7 +77,6 @@ class OrderServiceTest {
     @Nested
     @DisplayName("주문 생성 테스트")
     class createTest {
-        private final UUID shopId = UUID.randomUUID();
         private final List<OrderItem> orderItems = List.of();
         private final int price = 10_000;
 
@@ -90,7 +88,7 @@ class OrderServiceTest {
             willDoNothing().given(shop).validateOrder(anyList(), anyInt());
 
             // when
-            orderService.create(shopId, orderItems);
+            orderService.create(shop.getId(), orderItems);
 
             // then
             then(orderRepository).should(times(1)).save(any(), anyList(), anyInt());
@@ -102,12 +100,12 @@ class OrderServiceTest {
         @DisplayName("주문 항목들이 없으면 ValidationFailException 예외를 던져야 한다.")
         void create_Fail_ByEmptyOrderItems() {
             // given
-            Shop fakeShop = new Shop(shopId, "", List.of(), 0);
+            Shop fakeShop = new Shop(shop.getId(), "", List.of(), 0);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then
             assertThatExceptionOfType(ValidationFailException.class)
-                    .isThrownBy(() -> orderService.create(shopId, orderItems))
+                    .isThrownBy(() -> orderService.create(shop.getId(), orderItems))
                     .withMessage(EMPTY_ORDER.getMessage());
         }
 
@@ -121,12 +119,12 @@ class OrderServiceTest {
             Menu menu = new Menu("chicken", price);
             List<OrderItem> orderItems = List.of(new OrderItem(menu, orderCount));
 
-            Shop fakeShop = new Shop(shopId, "", List.of(), minimumOrderPrice);
+            Shop fakeShop = new Shop(shop.getId(), "", List.of(), minimumOrderPrice);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then
             assertThatExceptionOfType(ValidationFailException.class)
-                    .isThrownBy(() -> orderService.create(shopId, orderItems))
+                    .isThrownBy(() -> orderService.create(shop.getId(), orderItems))
                     .withMessage(LESS_THAN_MIN_AMOUNT.getMessage());
         }
 
@@ -140,12 +138,12 @@ class OrderServiceTest {
             Menu notSupportMenu = new Menu("another-chicken", price);
             List<OrderItem> orderItems = List.of(new OrderItem(notSupportMenu, orderCount));
 
-            Shop fakeShop = new Shop(shopId, "", List.of(supportMenu), minimumOrderPrice);
+            Shop fakeShop = new Shop(shop.getId(), "", List.of(supportMenu), minimumOrderPrice);
             willReturn(fakeShop).given(shopService).findById(any());
 
             // when, then
             assertThatExceptionOfType(ValidationFailException.class)
-                    .isThrownBy(() -> orderService.create(shopId, orderItems))
+                    .isThrownBy(() -> orderService.create(shop.getId(), orderItems))
                     .withMessage(NOT_SUPPORT_MENU.getMessage());
         }
     }
