@@ -4,6 +4,7 @@ import com.devcourse.hejow.global.ApiResponse;
 import com.devcourse.hejow.module.order.api.dto.OrderRequest;
 import com.devcourse.hejow.module.order.application.OrderService;
 import com.devcourse.hejow.module.order.application.dto.GetShopOrderResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,7 +37,7 @@ public class OrderController {
     @ResponseStatus(CREATED)
     @PostMapping("/{shopId}")
     public ApiResponse<Void> createOrder(@PathVariable UUID shopId,
-                                         @RequestBody OrderRequest request) {
+                                         @RequestBody @Valid OrderRequest request) {
         orderService.create(shopId, request.orderItems());
         return ApiResponse.noPayload();
     }
